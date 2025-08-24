@@ -7,6 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     git build-essential cmake python3 python3-pip curl wget \
+    libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Hugging Face CLI
@@ -18,6 +19,7 @@ RUN git clone https://github.com/ggerganov/llama.cpp.git
 WORKDIR /app/llama.cpp
 
 # Build llama.cpp with server enabled
+WORKDIR /app/llama.cpp
 RUN cmake -S . -B build -DLLAMA_CUBLAS=OFF -DLLAMA_BUILD_SERVER=ON \
     && cmake --build build -j \
     && cp build/bin/llama-server /usr/local/bin/llama-server
