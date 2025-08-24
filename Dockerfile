@@ -18,8 +18,9 @@ RUN git clone https://github.com/ggerganov/llama.cpp.git
 WORKDIR /app/llama.cpp
 
 # Build llama.cpp with server enabled
-RUN cmake -B build -DGGML_CUBLAS=OFF . && cmake --build build -j && \
-    cp build/bin/llama-server /usr/local/bin/llama-server
+RUN cmake -S . -B build -DLLAMA_CUBLAS=OFF -DLLAMA_BUILD_SERVER=ON \
+    && cmake --build build -j \
+    && cp build/bin/llama-server /usr/local/bin/llama-server
 
 # Download SmolVLM model
 WORKDIR /app
