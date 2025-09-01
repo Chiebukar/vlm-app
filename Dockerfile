@@ -8,15 +8,19 @@ RUN apt-get update && apt-get install -y \
     build-essential cmake git wget curl unzip \
     libssl-dev pkg-config python3 python3-pip \
     libevent-dev libmicrohttpd-dev \
+    clang lld \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone llama.cpp
+# Clone llama.cpp (pin to a stable commit that supports the server)
 WORKDIR /app
 RUN git clone https://github.com/ggerganov/llama.cpp.git
 WORKDIR /app/llama.cpp
+RUN git checkout 0dc53e4   # <- stable commit known to build llama-server
 
-# Build llama.cpp with server enabled
-RUN cmake -S . -B build -DLLAMA_CUBLAS=OFF -DLLAMA_BUILD_SERVER=ON \
+# Build llama.cpp server
+RUN cmake -S . -B build \
+    -DLLAMA_CUBLAS=OFF \
+    -DBUILD_SERVER=ON \
     && cmake --build build -j \
     && cp build/bin/llama-server /usr/local/bin/llama-server
 
