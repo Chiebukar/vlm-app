@@ -11,11 +11,10 @@ RUN apt-get update && apt-get install -y \
     clang lld \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone llama.cpp (pin to a stable commit that supports the server)
+# Clone llama.cpp (latest main)
 WORKDIR /app
 RUN git clone https://github.com/ggerganov/llama.cpp.git
 WORKDIR /app/llama.cpp
-RUN git checkout 0dc53e4   # <- stable commit known to build llama-server
 
 # Build llama.cpp server
 RUN cmake -S . -B build \
@@ -23,6 +22,7 @@ RUN cmake -S . -B build \
     -DBUILD_SERVER=ON \
     && cmake --build build -j \
     && cp build/bin/llama-server /usr/local/bin/llama-server
+
 
 # -------------------------
 # Stage 2: Final runtime
