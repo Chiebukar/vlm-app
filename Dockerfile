@@ -7,6 +7,7 @@ FROM ubuntu:22.04 AS builder
 RUN apt-get update && apt-get install -y \
     build-essential cmake git wget curl unzip \
     libssl-dev pkg-config python3 python3-pip \
+    libevent-dev libmicrohttpd-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone llama.cpp
